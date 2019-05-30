@@ -16,5 +16,29 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Reset output
+    Mux16(a=currentOut, b=false, sel=reset, out=resetOut);
+
+    // Load output
+    Mux16(a=currentOut, b=in, sel=load, out=setOut);
+
+    // Increment output
+    Inc16(in=currentOut, out=addOneOut);
+
+    Or8Way(in[0]=load, in[1]=reset, in[2]=inc, out=shouldLoad);
+
+    Register(in=counterOut, load=shouldLoad, out=out, out=currentOut);
+
+    // Counter output
+    Mux8Way16(
+        a=currentOut,   // 000
+        b=addOneOut,    // 001
+        c=setOut,       // 010
+        d=setOut,       // 011
+        e=resetOut,     // 100
+        f=resetOut,     // 101
+        g=resetOut,     // 110
+        h=resetOut,     // 111
+        sel[0]=inc, sel[1]=load, sel[2]=reset, out=counterOut);
+
 }
