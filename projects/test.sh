@@ -4,13 +4,14 @@ type="$1"
 filename="$2"
 
 dir="$(dirname $filename)"
-fileNoExtension="$(basename -s .hdl -s .asm $filename)"
+fileNoExtension="$(basename -s .asm $filename)"
+fileNoExtension="$(basename -s .hdl $fileNoExtension)"
 
 testfile="$dir/$fileNoExtension".tst
 cmpfile="$dir/$fileNoExtension".cmp
 outfile="$dir/$fileNoExtension".out
 
-if [ ${type} = "hdl" ]; then
+if [ ${type} == ".hdl" ]; then
     ../tools/HardwareSimulator.sh $testfile
 else
     ../tools/Assembler.sh $filename
